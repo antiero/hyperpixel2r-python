@@ -6,7 +6,7 @@ import pygame
 import math
 from colorsys import hsv_to_rgb
 from hyperpixel2r import Touch
-
+from pygame import gfxdraw
 """
 HyperPixel 2 Base Screen Object
 
@@ -16,8 +16,7 @@ Run with: sudo python3 hue.py
 
 class Hyperpixel2r:
     screen = None
-
-    def __init__(self):
+    def __init__(self, bordered=True, debug=False, fps=60):
         self._init_display()
 
         self.screen.fill((0, 0, 0))
@@ -30,14 +29,34 @@ class Hyperpixel2r:
         self.center = (240, 240)
         self.radius = 240
         self.inner_radius = 150
+        self._draw_bounds = bordered
+        self._debug = debug
+        self._desiredFPS = fps
 
         self._running = False
         self._origin = pygame.math.Vector2(*self.center)
         self._clock = pygame.time.Clock()
 
-        # Draw a White Circle to indicate the edge of the display
-        # we overdraw 3x as many lines to get a nice solid fill... horribly inefficient but it works
-        pygame.draw.circle(self.screen, (0, 0, 0), self.center, self.radius)
+        # On Pi Zero, needed to run: sudo apt install libsdl2-ttf-2.0-0
+        pygame.font.init()
+        self.debugFont = pygame.font.Font(None, 40)
+
+        # Draw a White Circle Outline to indicate the edge of the display
+        if self._draw_bounds:
+          self.draw_bounds()
+
+    def draw_bounds(self, antiAlias=True):
+        """
+        Draws a circular border at the extent of the screen
+        """
+        if antiAlias:
+          for i in range(0,5):
+            pygame.gfxdraw.aacircle(self.screen, self.center[1], self.center[1], self.radius-i, (250,250,250))
+        else:
+            pygame.draw.circle(self.screen, (250, 250, 250), self.center, self.radius, 4)
+
+    def _debugFPSText(self):
+        print("FPS: " + str(int(self._clock.get_fps())))
 
     def _exit(self, sig, frame):
         self._running = False
@@ -117,12 +136,13 @@ class Hyperpixel2r:
                         break
 
             # DRAW CODE GOES HERE
-
+            if self._debug:
+              self._debugFPSText()
             if self._rawfb:
                 self._updatefb()
             else:
                 pygame.display.flip()
-            self._clock.tick(30)
+            self._clock.tick(self._desiredFPS)
 
         pygame.quit()
         sys.exit(0)

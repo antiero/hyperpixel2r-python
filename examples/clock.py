@@ -29,9 +29,7 @@ class Hyperpixel2r:
         else:
             pygame.display.update()
 
-        # For some reason the canvas needs a 7px vertical offset
-        # circular screens are weird...
-        self.center = (240, 247)
+        self.center = (240, 240)
         self._radius = 240
 
         # Distance of hour marks from center

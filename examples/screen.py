@@ -128,15 +128,12 @@ class Hyperpixel2r:
         sys.exit(0)
 
 
-@touch.on_touch
-def handle_touch(touch_id, x, y, state):
-    display.touch(x, y, state)
-    # uncomment to set colour on rgbmatrix,
-    # or try it with Mote USB or something!
-    # rgbmatrix.set_all(*display.get_colour())
-    # rgbmatrix.show()
-
 # USAGE:
 display = Hyperpixel2r()
 touch = Touch()
+
+@touch.on_touch
+def handle_touch(touch_id, x, y, state):
+    display.touch(x, y, state)
+
 display.run()

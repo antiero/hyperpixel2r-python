@@ -72,8 +72,6 @@ class Hyperpixel2r:
             print("Using driver specified by SDL_VIDEODRIVER: {}".format(os.getenv('SDL_VIDEODRIVER')))
             pygame.display.init()
             size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-            if size == (480, 480): # Fix for 480x480 mode offset
-                size = (640, 480)
             self.screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.NOFRAME | pygame.HWSURFACE)
             return
 
@@ -84,8 +82,6 @@ class Hyperpixel2r:
                 try:
                     pygame.display.init()
                     size = (pygame.display.Info().current_w, pygame.display.Info().current_h)
-                    if size == (480, 480):  # Fix for 480x480 mode offset
-                        size = (640, 480)
                     self.screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.NOFRAME | pygame.HWSURFACE)
                     print("Using driver: {0}, Framebuffer size: {1:d} x {2:d}".format(driver, *size))
                     return
